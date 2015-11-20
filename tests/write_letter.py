@@ -19,7 +19,6 @@ class WriteLetterTest(unittest.TestCase):
         login_page.open()
 
         login_form = login_page.form()
-        # login_form.open_login_form()
         login_form.set_email_name(self.EMAIL)
         login_form.set_password(self.PASSWORD)
         login_form.submit()
