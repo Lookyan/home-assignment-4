@@ -16,6 +16,9 @@ class HeaderSwitcher(Component):
     NO_REPLY = 'Notify'
     ROW_BIG = "//div[contains(@class, 'compose__header__row_{}')]"
     ROW_SMALL = "//span[contains(@class, 'js-row-{}')]"
+    NO_REPLY_DROPDOWN_BTN = "//div[contains(@class, 'js-dropdown-select-notify')]"
+    NO_REPLY_DROPDOWN_BTN_TEXT = NO_REPLY_DROPDOWN_BTN + "//span[@class='dropdown__button-inline__text']"
+    NO_REPLY_DROPDOWN_LIST_ELEM = NO_REPLY_DROPDOWN_BTN + "//div[contains(@class, 'dropdown__list__item') and @data-time='{}']"
 
     # def __init__(self, driver):
     #     Component.__init__(self, driver)
@@ -32,3 +35,12 @@ class HeaderSwitcher(Component):
             return self.driver.find_element_by_xpath(self.ROW_BIG.format(row.lower()))
         else:
             return self.driver.find_element_by_xpath(self.ROW_SMALL.format(row))
+
+    def get_no_reply_dropdown_btn(self):
+        return self.driver.find_element_by_xpath(self.NO_REPLY_DROPDOWN_BTN)
+
+    def get_no_reply_dropdown_btn_text(self):
+        return self.driver.find_element_by_xpath(self.NO_REPLY_DROPDOWN_BTN_TEXT).text
+
+    def get_no_reply_dropdown_list_elem(self, time):
+        return self.driver.find_element_by_xpath(self.NO_REPLY_DROPDOWN_LIST_ELEM.format(time))
