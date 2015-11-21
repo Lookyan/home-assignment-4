@@ -3,10 +3,23 @@ from tests.base import Component
 
 class LetterParams(Component):
     RECEIVER_ADDRESS = "//textarea[@data-original-name='To']"
-    SPAN_LEGAL_EMAIL = "//span[@class='js-compose-label compose__labels__label']"
+    SPAN_LEGAL_EMAIL = "//span[@class='compose__labels__label__text js-label-text' and @data-text='{0}']"
+    SPAN_EMAIL_CONTAINS = "//span[@data-text='{0}']"
+    SPAN_INVALID_EMAIL = "//span[@class='js-compose-label compose__labels__label compose__labels__label_invalid']"
+    GRAY_BOX = "//div[@class='b-compose__head']"
 
-    def set_receiver_address(self, address):
+
+    def is_span_right_email(self, email):
+        return self.check_exists_by_xpath(self.SPAN_LEGAL_EMAIL.format(email))
+
+    def is_span_wrong_email(self):
+        return self.check_exists_by_xpath(self.SPAN_INVALID_EMAIL)
+
+    def set_to_addr(self, address):
         self.driver.find_element_by_xpath(self.RECEIVER_ADDRESS).send_keys(address + " ")
 
-    def is_span_right_email(self):
-        return self.check_exists_by_xpath(self.SPAN_LEGAL_EMAIL)
+    def unfocus(self):
+        self.driver.find_element_by_xpath(self.GRAY_BOX).click()
+
+    def count_emails(self, email):
+        return len(self.driver.find_elements_by_xpath(self.SPAN_EMAIL_CONTAINS.format(email)))
