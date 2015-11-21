@@ -6,7 +6,7 @@ class LetterParams(Component):
     SPAN_LEGAL_EMAIL = "//span[@class='js-compose-label compose__labels__label']"
 
     def set_receiver_address(self, address):
-        self.driver.find_element_by_xpath(self.RECIEVER_ADDRESS).send_keys(address + " ")
+        self.driver.find_element_by_xpath(self.RECEIVER_ADDRESS).send_keys(address + " ")
 
     def is_span_right_email(self, address):
         return self.driver.find_element_by_xpath(self.SPAN_LEGAL_EMAIL).text

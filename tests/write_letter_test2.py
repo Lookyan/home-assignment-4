@@ -30,6 +30,7 @@ class WriteLetterTest2(unittest.TestCase):
     def test_copy_to_appear(self):
         header_switcher = self.compose_page.header_switcher()
         header_switcher.get_dropdown_button().click()
-        header_switcher.get_dropdown_list_element(header_switcher.DROPDOWN_LIST_HIDDEN_COPY).click()
-        # sleep(5)
-        header_switcher.get_dropdown_list_element(header_switcher.DROPDOWN_LIST_HIDDEN_COPY).click()
+        header_switcher.get_dropdown_list_element(header_switcher.COPY).click()
+        # self.assertTrue(header_switcher.get_row(header_switcher.COPY))
+        header_switcher.get_dropdown_button().click()
+        header_switcher.get_dropdown_list_element(header_switcher.COPY).click()

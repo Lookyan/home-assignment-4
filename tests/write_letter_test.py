@@ -26,8 +26,8 @@ class WriteLetterTest(unittest.TestCase):
     def tearDown(self):
         self.driver.quit()
 
-    def test_reciever_field(self):
+    def test_receiver_field(self):
         letter_params = self.compose_page.letter_params()
         TEST_LEGAL_EMAIL = "test@mail.ru"
-        letter_params.set_reciever_address(TEST_LEGAL_EMAIL)
+        letter_params.set_receiver_address(TEST_LEGAL_EMAIL)
         text = letter_params.is_span_right_email(TEST_LEGAL_EMAIL)
