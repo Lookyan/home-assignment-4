@@ -8,8 +8,5 @@ class LetterParams(Component):
     def set_receiver_address(self, address):
         self.driver.find_element_by_xpath(self.RECIEVER_ADDRESS).send_keys(address + " ")
 
-    def is_span_right_email(self, address):
-        return self.driver.find_element_by_xpath(self.SPAN_LEGAL_EMAIL).text
-        # return WebDriverWait(self.driver, 30, 0.1).until(
-        #     lambda d: d.find_element_by_xpath(self.SPAN_LEGAL_EMAIL).text
-        # )
+    def is_span_right_email(self):
+        return self.check_exists_by_xpath(self.SPAN_LEGAL_EMAIL)

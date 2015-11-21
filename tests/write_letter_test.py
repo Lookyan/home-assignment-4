@@ -30,4 +30,4 @@ class WriteLetterTest(unittest.TestCase):
         letter_params = self.compose_page.letter_params()
         TEST_LEGAL_EMAIL = "test@mail.ru"
         letter_params.set_reciever_address(TEST_LEGAL_EMAIL)
-        text = letter_params.is_span_right_email(TEST_LEGAL_EMAIL)
+        self.assertTrue(letter_params.is_span_right_email())
