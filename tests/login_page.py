@@ -1,6 +1,6 @@
 # coding=UTF-8
 
-from page import Page, Component
+from base import Page, Component
 
 
 class LoginPage(Page):
