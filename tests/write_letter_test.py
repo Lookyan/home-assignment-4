@@ -61,3 +61,10 @@ class WriteLetterTest(unittest.TestCase):
         letter_params.set_to_addr("test@mail.ru")
         letter_params.unfocus()
         self.assertEqual(1, letter_params.count_emails("test@mail.ru"))
+
+    def test_email_remove(self):
+        letter_params = self.compose_page.letter_params()
+        letter_params.set_to_addr("test@mail.ru")
+        letter_params.unfocus()
+        letter_params.remove_email("test@mail.ru")
+        self.assertTrue(letter_params.check_email_removal("test@mail.ru"))
