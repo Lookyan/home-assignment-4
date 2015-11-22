@@ -9,6 +9,7 @@ class LetterParams(Component):
     SPAN_INVALID_EMAIL = "//span[@class='js-compose-label compose__labels__label compose__labels__label_invalid']"
     GRAY_BOX = "//div[@class='b-compose__head']"
     REMOVE_ICON = "//span[@class='js-compose-label compose__labels__label' and @data-text='{0}']/i"
+    COPY_ADDRESS = "//textarea[@data-original-name='CC']"
 
 
     def is_span_right_email(self, email):
@@ -31,3 +32,6 @@ class LetterParams(Component):
 
     def check_email_removal(self, email):
         return WebDriverWait(self.driver, 10).until_not(lambda s: s.find_element_by_xpath(email))
+
+    def enter_copy_email(self, email):
+        self.driver.find_element_by_xpath(self.COPY_ADDRESS).send_keys(email + " ")

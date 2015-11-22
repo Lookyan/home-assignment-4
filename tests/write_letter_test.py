@@ -53,7 +53,7 @@ class WriteLetterTest(unittest.TestCase):
         self.assertTrue(letter_params.is_span_right_email("test@mail.ru"))
         self.assertTrue(letter_params.is_span_wrong_email())
 
-    #1.6
+    #1.7
     def test_enter_equal_emails(self):
         letter_params = self.compose_page.letter_params()
         letter_params.set_to_addr("test@mail.ru")
@@ -62,9 +62,52 @@ class WriteLetterTest(unittest.TestCase):
         letter_params.unfocus()
         self.assertEqual(1, letter_params.count_emails("test@mail.ru"))
 
+    #1.8
     def test_email_remove(self):
         letter_params = self.compose_page.letter_params()
         letter_params.set_to_addr("test@mail.ru")
         letter_params.unfocus()
         letter_params.remove_email("test@mail.ru")
         self.assertTrue(letter_params.check_email_removal("test@mail.ru"))
+
+    #2.1
+    def test_copy_field(self):
+        letter_params = self.compose_page.letter_params()
+        letter_params.enter_copy_email("test@mail.ru")
+        self.assertTrue(letter_params.is_span_right_email("test@mail.ru"))
+
+    #2.2
+    def test_copy_incorrect_email(self):
+        letter_params = self.compose_page.letter_params()
+        letter_params.enter_copy_email("wrongemail.ru")
+        letter_params.unfocus()
+        self.assertTrue(letter_params.is_span_wrong_email())
+
+    #2.6
+    def test_copy_correct_incorrect(self):
+        letter_params = self.compose_page.letter_params()
+        letter_params.enter_copy_email("test@mail.ru")
+        letter_params.unfocus()
+        letter_params.enter_copy_email("wrongemail.ru")
+        letter_params.unfocus()
+        self.assertTrue(letter_params.is_span_right_email("test@mail.ru"))
+        self.assertTrue(letter_params.is_span_wrong_email())
+
+    #2.7
+    def test_copy_equal_emails(self):
+        letter_params = self.compose_page.letter_params()
+        letter_params.enter_copy_email("test@mail.ru")
+        letter_params.unfocus()
+        letter_params.enter_copy_email("test@mail.ru")
+        letter_params.unfocus()
+        self.assertEqual(1, letter_params.count_emails("test@mail.ru"))
+
+    #2.8
+    def test_copy_addr_removal(self):
+        letter_params = self.compose_page.letter_params()
+        letter_params.enter_copy_email("test@mail.ru")
+        letter_params.unfocus()
+        letter_params.remove_email("test@mail.ru")
+        self.assertTrue(letter_params.check_email_removal("test@mail.ru"))
+
+    #3.1
