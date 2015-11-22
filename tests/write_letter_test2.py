@@ -131,3 +131,15 @@ class WriteLetterTest2(unittest.TestCase):
         text = u"hi hi hi"
         self.content_edit.change_text(text)
         self.assertEqual(self.content_edit.get_text(), text)
+
+    def test_remove_content(self):
+        text = u"hi hi hi"
+        num = 3
+        self.content_edit.change_text(text)
+        self.content_edit.send_backspaces(num)
+        self.assertEqual(self.content_edit.get_text(), text[:-num])
+
+    def test_bold(self):
+        self.content_edit.change_text("lalala")
+        self.content_edit.add_style("bold")
+        self.assertTrue(self.content_edit.check_bold())
