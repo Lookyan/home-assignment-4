@@ -9,4 +9,3 @@ class Toolbar(Component):
     def click_add_button(self):
         self.driver.find_element_by_xpath(self.ADD_BUTTON).click()
 
-    

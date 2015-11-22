@@ -44,7 +44,15 @@ class WriteLetterTest(unittest.TestCase):
         self.assertTrue(letter_params.is_span_wrong_email())
 
     #1.3
-    #1.4
+    def test_choose_contact_js(self):
+        pass
+
+    #1.4.1
+    def test_choose_contact_new_window(self):
+        self.address_book_page.open()
+        toolbar = self.address_book_page.toolbar()
+        toolbar.click_add_button()
+        sleep(3)
 
     #1.5
     def test_correct_incorrect_email(self):
