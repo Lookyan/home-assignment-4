@@ -1,3 +1,5 @@
+# coding=UTF-8
+
 from tests.base import Component
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -10,6 +12,8 @@ class LetterParams(Component):
     GRAY_BOX = "//div[@class='b-compose__head']"
     REMOVE_ICON = "//span[@class='js-compose-label compose__labels__label' and @data-text='{0}']/i"
     COPY_ADDRESS = "//textarea[@data-original-name='CC']"
+    TOPIC = "//input[@name='Subject']"
+    TOPIC_BUTTON = "//label[contains(., 'Тема') and @class='compose__header__label js-label']"
 
 
     def is_span_right_email(self, email):
@@ -35,3 +39,15 @@ class LetterParams(Component):
 
     def enter_copy_email(self, email):
         self.driver.find_element_by_xpath(self.COPY_ADDRESS).send_keys(email + " ")
+
+    def enter_topic(self, text):
+        self.driver.find_element_by_xpath(self.TOPIC).send_keys(text)
+
+    def check_topic_text(self, text):
+        return self.driver.find_element_by_xpath(self.TOPIC).get_attribute("value") == text
+
+    def click_topic_for_focus(self):
+        self.driver.find_element_by_xpath(self.TOPIC_BUTTON).click()
+
+    def check_focus_on_topic_input(self):
+        return self.driver.find_element_by_xpath(self.TOPIC) == self.driver.switch_to_active_element()

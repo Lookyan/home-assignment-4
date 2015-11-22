@@ -111,3 +111,15 @@ class WriteLetterTest(unittest.TestCase):
         self.assertTrue(letter_params.check_email_removal("test@mail.ru"))
 
     #3.1
+
+    #4.1
+    def test_focus_via_topic_click(self):
+        letter_params = self.compose_page.letter_params()
+        letter_params.click_topic_for_focus()
+        self.assertTrue(letter_params.check_focus_on_topic_input())
+
+    #4.2
+    def test_topic_field(self):
+        letter_params = self.compose_page.letter_params()
+        letter_params.enter_topic("Lorem ipsum")
+        self.assertTrue(letter_params.check_topic_text("Lorem ipsum"))
