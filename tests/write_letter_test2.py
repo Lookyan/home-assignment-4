@@ -127,6 +127,8 @@ class WriteLetterTest2(unittest.TestCase):
         header_switcher.get_no_reply_dropdown_list_elem(3600).click()
         self.assertEqual(header_switcher.get_no_reply_dropdown_btn_text(), u'1 час')
 
+    ########################################
+
     def test_add_content(self):
         text = u"hi hi hi"
         self.content_edit.change_text(text)
@@ -141,5 +143,113 @@ class WriteLetterTest2(unittest.TestCase):
 
     def test_bold(self):
         self.content_edit.change_text("lalala")
-        self.content_edit.add_style("bold")
+        self.content_edit.add_simple_style("bold")
         self.assertTrue(self.content_edit.check_bold())
+
+    def test_italic(self):
+        self.content_edit.change_text("lalala")
+        self.content_edit.add_simple_style("italic")
+        self.assertTrue(self.content_edit.check_italic())
+
+    def test_underline(self):
+        self.content_edit.change_text("lalala")
+        self.content_edit.add_simple_style("underline")
+        self.assertTrue(self.content_edit.check_underline())
+
+    def test_text_color(self):
+        color = "#89f641"
+        self.content_edit.change_text("lalala")
+        self.content_edit.add_text_color(color)
+        self.assertTrue(self.content_edit.check_text_color(color))
+
+    def test_background_color(self):
+        color = "#89f641"
+        self.content_edit.change_text("lalala")
+
+        self.content_edit.add_background_color(color)
+        self.assertTrue(self.content_edit.check_background_color(color))
+
+    def test_font_size_family(self):
+        self.content_edit.change_text("lalala")
+
+        family = "comic sans"
+        self.content_edit.pick_font_family(family)
+        self.assertTrue(self.content_edit.check_font_family(family))
+
+        family = "arial black"
+        self.content_edit.pick_font_family(family)
+        self.assertTrue(self.content_edit.check_font_family(family))
+
+        family = "georgia"
+        self.content_edit.pick_font_family(family)
+        self.assertTrue(self.content_edit.check_font_family(family))
+
+        size = 5
+        self.content_edit.pick_font_size(size)
+        self.assertTrue(self.content_edit.check_font_size(size))
+
+        size = 2
+        self.content_edit.pick_font_size(size)
+        self.assertTrue(self.content_edit.check_font_size(size))
+
+    def test_align(self):
+        self.content_edit.change_text("lalala")
+
+        align = "center"
+        self.content_edit.add_align(align)
+        self.assertTrue(self.content_edit.check_align(align))
+
+        align = "right"
+        self.content_edit.add_align(align)
+        self.assertTrue(self.content_edit.check_align(align))
+
+        align = "left"
+        self.content_edit.add_align(align)
+        self.assertTrue(self.content_edit.check_align(align))
+
+    def test_indent(self):
+        self.content_edit.change_text("lalala")
+
+        self.content_edit.add_indent()
+        self.assertTrue(self.content_edit.check_indent(1))
+
+        self.content_edit.add_indent()
+        self.assertTrue(self.content_edit.check_indent(2))
+
+        self.content_edit.remove_indent()
+        self.content_edit.remove_indent()
+        self.assertTrue(self.content_edit.check_indent(0))
+
+    def test_list_ordered(self):
+        self.content_edit.change_text("lalala")
+
+        order = 'ordered'
+        self.content_edit.add_list(order)
+        self.assertTrue(self.content_edit.check_list(order))
+
+        self.content_edit.add_text("\nhahaha")
+        self.assertTrue(self.content_edit.check_list(order, 2))
+
+    def test_list_unordered(self):
+        self.content_edit.change_text("lalala")
+
+        order = 'unordered'
+        self.content_edit.add_list(order)
+        self.assertTrue(self.content_edit.check_list(order))
+
+        self.content_edit.add_text("\nhahaha")
+        self.assertTrue(self.content_edit.check_list(order, 2))
+
+    def test_emotion(self):
+        self.content_edit.add_emotion('drinks')
+        self.assertTrue(self.content_edit.check_emotion('drinks'))
+
+    def test_undo_redo(self):
+        text = 'lalala'
+        self.content_edit.change_text(text)
+
+        self.content_edit.undo()
+        self.assertEqual(self.content_edit.get_text(), '')
+        self.content_edit.redo()
+        self.assertEqual(self.content_edit.get_text(), text)
+
