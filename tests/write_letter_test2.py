@@ -4,6 +4,7 @@ import unittest
 from login_page import LoginPage
 from compose_page import ComposePage
 from components.header_switcher import HeaderSwitcher
+from components.content_edit import ContentEdit
 
 from selenium import webdriver
 
@@ -28,6 +29,8 @@ class WriteLetterTest2(unittest.TestCase):
 
         self.header_switcher = self.compose_page.header_switcher()
         self.header_switcher_dropdown_btn = self.header_switcher.get_dropdown_button()
+
+        self.content_edit = ContentEdit(self.driver)
 
     def tearDown(self):
         self.driver.quit()
@@ -123,3 +126,8 @@ class WriteLetterTest2(unittest.TestCase):
         header_switcher.get_no_reply_dropdown_btn().click()
         header_switcher.get_no_reply_dropdown_list_elem(3600).click()
         self.assertEqual(header_switcher.get_no_reply_dropdown_btn_text(), u'1 час')
+
+    def test_add_content(self):
+        text = u"hi hi hi"
+        self.content_edit.change_text(text)
+        self.assertEqual(self.content_edit.get_text(), text)
