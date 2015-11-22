@@ -3,7 +3,7 @@ from tests.base import Component
 
 class LetterParams(Component):
     RECEIVER_ADDRESS = "//textarea[@data-original-name='To']"
-    SPAN_LEGAL_EMAIL = "//span[@class='compose__labels__label__text js-label-text' and @data-text='{0}']"
+    SPAN_LEGAL_EMAIL = "//span[@class='js-compose-label compose__labels__label' and @data-text='{0}']"
     SPAN_EMAIL_CONTAINS = "//span[@data-text='{0}']"
     SPAN_INVALID_EMAIL = "//span[@class='js-compose-label compose__labels__label compose__labels__label_invalid']"
     GRAY_BOX = "//div[@class='b-compose__head']"

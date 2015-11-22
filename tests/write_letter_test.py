@@ -50,7 +50,7 @@ class WriteLetterTest(unittest.TestCase):
         letter_params.unfocus()
         letter_params.set_to_addr("wrongemail.ru")
         letter_params.unfocus()
-        self.assertTrue(letter_params.is_span_right_email())
+        self.assertTrue(letter_params.is_span_right_email("test@mail.ru"))
         self.assertTrue(letter_params.is_span_wrong_email())
 
     #1.6
