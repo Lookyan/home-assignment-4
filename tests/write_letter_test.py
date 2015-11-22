@@ -1,6 +1,7 @@
 import unittest
 from login_page import LoginPage
 from compose_page import ComposePage
+from addressbook_page import AddressBookPage
 from time import sleep
 
 from selenium import webdriver
@@ -23,6 +24,8 @@ class WriteLetterTest(unittest.TestCase):
 
         self.compose_page = ComposePage(self.driver)
         self.compose_page.open()
+
+        self.address_book_page = AddressBookPage(self.driver)
 
     def tearDown(self):
         self.driver.quit()

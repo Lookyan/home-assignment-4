@@ -4,7 +4,7 @@ from base import Page
 from components.toolbar import Toolbar
 
 
-class ComposePage(Page):
+class AddressBookPage(Page):
     PATH = '/addressbook/'
 
     def toolbar(self):
