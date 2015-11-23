@@ -253,3 +253,28 @@ class WriteLetterTest2(unittest.TestCase):
         self.content_edit.redo()
         self.assertEqual(self.content_edit.get_text(), text)
 
+    def test_add_line(self):
+        self.content_edit.add_line()
+        self.content_edit.check_line()
+
+    def test_add_link(self):
+        href = 'http://mail.ru'
+        title = 'MailRu'
+        self.content_edit.add_link(href, title)
+        self.content_edit.check_link(href, title)
+
+    def test_translit(self):
+        text = u'привет'
+        translited = 'privet'
+        self.content_edit.change_text(text)
+        self.content_edit.translit_text()
+        self.assertEqual(self.content_edit.get_text(), translited)
+
+    def test_remove_format(self):
+        text = 'hihihi'
+        self.content_edit.change_text(text)
+        self.content_edit.add_simple_style('bold')
+        self.content_edit.add_simple_style('italic')
+        self.assertNotEqual(self.content_edit.check_tags(), 0)
+        self.content_edit.remove_format()
+        self.assertEqual(self.content_edit.check_tags(), 0)

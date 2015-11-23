@@ -1,10 +1,24 @@
-# import time
+# -*- coding: utf-8 -*-
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import ActionChains
+from selenium.webdriver.support.expected_conditions import _find_element
+from selenium.webdriver.common.by import By
 # from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
 
 from tests.base import Component
+
+
+# custom expected condition
+class text_to_change(object):
+    def __init__(self, xpath, text):
+        self.locator = (By.XPATH, xpath)
+        self.before_text = text
+
+    def __call__(self, driver):
+        text = _find_element(driver, self.locator).text
+        return text != self.before_text
 
 
 class ContentEdit(Component):
@@ -26,6 +40,7 @@ class ContentEdit(Component):
     REDO_BTN = BASE_BTN.format('redo')
     # SPELLING_BTN = BASE_BTN.format('appspelling')
     # TRANSLATE_BTN = BASE_BTN.format('apptransfer')
+    MORE_ACTIONS_BTN = "//a[contains(@class, 'mce_moreactions')]"
 
     TEXT_COLOR_PICK_BTN = "//div[contains(@class, 'mce_forecolor')]//a[@_mce_color='{}']"
     BACK_COLOR_PICK_BTN = "//div[contains(@class, 'mce_backcolor')]//a[@_mce_color='{}']"
@@ -33,9 +48,20 @@ class ContentEdit(Component):
     ALIGN_PICK_BTN = "//div[contains(@class, 'Justify{}')]/a"
     INDENT_CHANGE_BTN = "//div[contains(@class, '{}')]/a"
     LIST_INSERT_BTN = "//div[contains(@class, 'Insert{}List')]/a"
+
     EMOTIONS_TAB_BTN = "//div[contains(@class, 'mceEmotionsTab0')]"
     EMOTION_PICK_BTN = "//img[@class='{}']"
     EMOTION_TEXT_BTN = "//img[contains(@src, '{}')]"
+
+    LINE_INSERT_BTN = "//div[contains(@class, 'InsertHorizontalRule')]/a"
+    LINE_THROUGH_BTN = "//div[contains(@class, 'Strikethrough')]/a"
+    TRANSLIT_BTN = "//div[contains(@class, 'mceAppTranslit')]/a"
+    REMOVE_FORMAT_BTN = "//div[contains(@class, 'RemoveFormat')]/a"
+
+    ADD_LINK_BTN = "//div[contains(@class, 'mceLink')]/a"
+    LINK_HREF_FIELD = "//div[contains(@class, 'mceLinkMenu')]//input[@name='href']"
+    LINK_TITLE_FIELD = "//div[contains(@class, 'mceLinkMenu')]//input[@name='title']"
+    LINK_SUBMIT_BTN = "//div[contains(@class, 'mceLinkMenu')]//input[@type='submit']"
 
     def switch_to_edit(self):
         self.driver.switch_to_frame(self.driver.find_element_by_xpath(self.IFRAME))
@@ -217,3 +243,46 @@ class ContentEdit(Component):
         self.driver.find_element_by_xpath(self.BASE).click()
         self.switch_back()
         self.driver.find_element_by_xpath(self.REDO_BTN).click()
+
+    def add_line(self):
+        self.driver.find_element_by_xpath(self.MORE_ACTIONS_BTN).click()
+        self.driver.find_element_by_xpath(self.LINE_INSERT_BTN).click()
+
+    def add_link(self, href, title):
+        self.driver.find_element_by_xpath(self.MORE_ACTIONS_BTN).click()
+        self.driver.find_element_by_xpath(self.ADD_LINK_BTN).click()
+        self.driver.find_element_by_xpath(self.LINK_HREF_FIELD).clear()
+        self.driver.find_element_by_xpath(self.LINK_HREF_FIELD).send_keys(href)
+        self.driver.find_element_by_xpath(self.LINK_TITLE_FIELD).send_keys(title)
+        self.driver.find_element_by_xpath(self.LINK_SUBMIT_BTN).click()
+
+    def translit_text(self):
+        text = self.get_text()
+        self.switch_to_edit()
+        self.select_text()
+        self.switch_back()
+        self.driver.find_element_by_xpath(self.MORE_ACTIONS_BTN).click()
+        self.driver.find_element_by_xpath(self.TRANSLIT_BTN).click()
+        self.switch_to_edit()
+        WebDriverWait(self.driver, 5).until(text_to_change(self.BASE, text))
+        self.switch_back()
+
+    def remove_format(self):
+        self.switch_to_edit()
+        self.select_text()
+        self.switch_back()
+        self.driver.find_element_by_xpath(self.MORE_ACTIONS_BTN).click()
+        self.driver.find_element_by_xpath(self.REMOVE_FORMAT_BTN).click()
+
+    def check_line(self):
+        return self.check_tag('hr')
+
+    def check_link(self, href, title):
+        self.switch_to_edit()
+        links = self.driver.find_elements_by_xpath(self.BASE + "/a[@href='{}']".format(href))
+        if len(links) != 1:
+            return False
+        return links[0].text == title
+
+    def check_tags(self):
+        return self.check_tag('*')
