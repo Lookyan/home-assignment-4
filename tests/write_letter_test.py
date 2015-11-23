@@ -57,16 +57,17 @@ class WriteLetterTest(unittest.TestCase):
         toolbar.enter_group_name("test")
         toolbar.create_group()
 
-        sleep(3)
         self.address_book_add_page.open()
-        sleep(10)
-        return
         contact = self.address_book_add_page.contact()
         contact.add_contact("Test1", "Test1", "test1@mail.ru", "test")
 
         self.address_book_page.open()
+        contact.delete_contact("test1@mail.ru")
         toolbar.group_delete("test")
-        sleep(10)
+
+    def test_address_add_open(self):
+        self.address_book_add_page.open()
+        sleep(100)
 
 
     #1.5

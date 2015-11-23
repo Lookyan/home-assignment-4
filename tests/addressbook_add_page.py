@@ -5,7 +5,7 @@ from components.contact import Contact
 
 
 class AddressBookAddPage(Page):
-    PATH = '/addressbook/add/'
+    PATH = '/addressbook/add'
 
     def contact(self):
         return Contact(self.driver)

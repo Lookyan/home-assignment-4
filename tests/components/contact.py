@@ -12,6 +12,9 @@ class Contact(Component):
     ENABLE_GROUP = "//div[@class='form__field__labels form__field js-labels-control']"
     GROUP = "//input[@class='form__field__labels__input ac_input']"
     SAVE_BUTTON = "//div/span[contains(.,'Сохранить')]"
+    CHECKBOX_EMAIL = "//div[@class='messageline contactline' and contains(., '{0}')]/label/input"
+    DELETE_BUTTON = "//div[@title='Удалить']"
+    DELETE_CONFIRM_BUTTON = "//button[contains(.,'Удалить')]"
 
     def add_contact(self, first_name, second_name, email, group_name):
         self.get_elem(self.FIRST_NAME).send_keys(first_name)
@@ -25,4 +28,6 @@ class Contact(Component):
         return WebDriverWait(self.driver, 30).until(lambda s: s.find_element_by_xpath(xpath))
 
     def delete_contact(self, email):
-        pass
+        self.driver.find_element_by_xpath(self.CHECKBOX_EMAIL.format(email)).click()
+        self.driver.find_element_by_xpath(self.DELETE_BUTTON).click()
+        self.driver.find_element_by_xpath(self.DELETE_CONFIRM_BUTTON).click()

@@ -15,11 +15,10 @@ class Toolbar(Component):
     SIDEBAR_GROUP = "//a/span[text()='{0}']"
     GROUP_SETTINGS_BUTTON = "//i[contains(@class, 'icon_menu_addressbook_edit')]"
     DELETE_LINK = "//a[contains(., 'Удалить')]"
-    CONFIRM_DELETE_BUTTON = "//button/span[contains(., 'Удалить')]"
+    CONFIRM_DELETE_BUTTON = "//form/div[@class='popup__controls']/button[@class='btn btn_main confirm-ok']/span[@class='btn__text' and contains(., 'Удалить')]"
 
     def click_add_button(self):
         WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.ADD_BUTTON))
-        # self.driver.find_element_by_xpath(self.ADD_BUTTON).click()
         self.click_on_elem(self.ADD_BUTTON)
 
     def open_group_creation(self):
@@ -33,12 +32,10 @@ class Toolbar(Component):
         self.driver.find_element_by_xpath(self.CREATE_GROUP_BUTTON).click()
 
     def group_delete(self, name):
-        item = WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.SIDEBAR_GROUP.format(name)))
-        hov = ActionChains(self.driver).move_to_element(item)
-        hov.perform()
+        self.hov_elem(self.SIDEBAR_GROUP.format(name))
         self.driver.find_element_by_xpath(self.GROUP_SETTINGS_BUTTON).click()
         self.driver.find_element_by_xpath(self.DELETE_LINK).click()
-        self.driver.find_element_by_xpath(self.CONFIRM_DELETE_BUTTON).click()
+        self.driver.find_elements_by_xpath(self.CONFIRM_DELETE_BUTTON)[1].click()
 
     def click_on_elem(self, xpath):
         try:
@@ -47,3 +44,13 @@ class Toolbar(Component):
             self.click_on_elem(xpath)
         except NoSuchElementException:
             self.click_on_elem(xpath)
+
+    def hov_elem(self, xpath):
+        try:
+            item = WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(xpath))
+            hov = ActionChains(self.driver).move_to_element(item)
+            hov.perform()
+        except StaleElementReferenceException:
+            self.hov_elem(xpath)
+        except NoSuchElementException:
+            self.hov_elem(xpath)
