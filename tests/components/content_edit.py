@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-
+import time
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import ActionChains
-from selenium.webdriver.support.expected_conditions import _find_element
+from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By
 # from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
+import re
 
 from tests.base import Component
 
@@ -17,7 +18,7 @@ class text_to_change(object):
         self.before_text = text
 
     def __call__(self, driver):
-        text = _find_element(driver, self.locator).text
+        text = expected_conditions._find_element(driver, self.locator).text
         return text != self.before_text
 
 
@@ -38,9 +39,11 @@ class ContentEdit(Component):
     EMOTIONS_BTN = BASE_BTN.format('emotions')
     UNDO_BTN = BASE_BTN.format('undo')
     REDO_BTN = BASE_BTN.format('redo')
-    # SPELLING_BTN = BASE_BTN.format('appspelling')
-    # TRANSLATE_BTN = BASE_BTN.format('apptransfer')
+    SPELLING_BTN = BASE_BTN.format('appspelling')
+    TRANSLATE_BTN = BASE_BTN.format('apptransfer')
     MORE_ACTIONS_BTN = "//a[contains(@class, 'mce_moreactions')]"
+    MINIMIZE_TOOLBAR_BTN = "//a[contains(@class, 'mce_enableTextEditor')]"
+    MAXIMIZE_TOOLBAR_BTN = "//a[contains(@class, 'mce_enableHTMLEditor')]"
 
     TEXT_COLOR_PICK_BTN = "//div[contains(@class, 'mce_forecolor')]//a[@_mce_color='{}']"
     BACK_COLOR_PICK_BTN = "//div[contains(@class, 'mce_backcolor')]//a[@_mce_color='{}']"
@@ -56,6 +59,7 @@ class ContentEdit(Component):
     LINE_INSERT_BTN = "//div[contains(@class, 'InsertHorizontalRule')]/a"
     LINE_THROUGH_BTN = "//div[contains(@class, 'Strikethrough')]/a"
     TRANSLIT_BTN = "//div[contains(@class, 'mceAppTranslit')]/a"
+    VIRTUAL_KEYBOARD_BTN = "//div[contains(@class, 'mceAppKeyboard')]/a"
     REMOVE_FORMAT_BTN = "//div[contains(@class, 'RemoveFormat')]/a"
 
     ADD_LINK_BTN = "//div[contains(@class, 'mceLink')]/a"
@@ -63,18 +67,39 @@ class ContentEdit(Component):
     LINK_TITLE_FIELD = "//div[contains(@class, 'mceLinkMenu')]//input[@name='title']"
     LINK_SUBMIT_BTN = "//div[contains(@class, 'mceLinkMenu')]//input[@type='submit']"
 
+    BIG_TOOLBAR = "//table[contains(@class, 'mceToolbarRow1')]"
+    SMALL_TOOLBAR = "//table[contains(@class, 'mceToolbarRow3')]"
+
+    COMPOSE_FRAME_TABLE = "//div[contains(@class, 'composeEditorFrame')]/table[@class='mlruTmpId{}']"
+    DESIGN_BTN = "//a[contains(@class, 'mce_design')]"
+    DESIGN_PICK_BTN = "//div[contains(@class, 'js-decoration_appearance')]//div[contains(@class, 'compose__decoration__slider__item__inner_big')]"
+
+    CARDS_BTN = "//a[contains(@class, 'mce_cards')]"
+    CARD_PICK_BTN = "//div[contains(@class, 'js-decoration_cards')]//div[contains(@class, 'compose__decoration__slider__item__inner_big')]"
+    CARD_ELEM = BASE + "//img[contains(@src, '/{}.')]"
+
+    SPELLING_CLOSE_BTN = "//div[contains(@class, 'mdl-btn') and div[text()='Закрыть']]"
+    SPELLING_NO_ERRORS = "//div[text()='В тексте письма орфографических ошибок не обнаружено.']"
+    SAVE_BTN = "//div[contains(@class, 'mdl-btn') and div[text()='Сохранить изменения']]"
+    KEYBOARD_KEY_BTN = u"//form[@name='keyb']//input[@value='{}']"
+
     def switch_to_edit(self):
         self.driver.switch_to_frame(self.driver.find_element_by_xpath(self.IFRAME))
 
     def switch_back(self):
         self.driver.switch_to_default_content()
 
-    def clear_edit(self):
+    def _clear_edit(self):
         self.driver.find_element_by_xpath(self.BASE).clear()
+
+    def clear_edit(self):
+        self.switch_to_edit()
+        self._clear_edit()
+        self.switch_back()
 
     def change_text(self, text):
         self.switch_to_edit()
-        self.clear_edit()
+        self._clear_edit()
         self.driver.find_element_by_xpath(self.BASE).send_keys(text)
         self.switch_back()
 
@@ -286,3 +311,88 @@ class ContentEdit(Component):
 
     def check_tags(self):
         return self.check_tag('*')
+
+    def minimize_toolbar(self):
+        self.driver.find_element_by_xpath(self.MINIMIZE_TOOLBAR_BTN).click()
+
+    def maximize_toolbar(self):
+        self.driver.find_element_by_xpath(self.MAXIMIZE_TOOLBAR_BTN).click()
+
+    def check_toolbar(self):
+        return 'big' if self.driver.find_element_by_xpath(self.BIG_TOOLBAR).is_displayed() else 'small'
+
+    def pick_theme(self, num):
+        self.driver.find_element_by_xpath(self.DESIGN_BTN).click()
+        themes = self.driver.find_elements_by_xpath(self.DESIGN_PICK_BTN)
+        themes[num].click()
+
+    def check_theme(self, num):
+        themes = self.driver.find_elements_by_xpath(self.DESIGN_PICK_BTN)
+        url = themes[num].value_of_css_property('background-image')
+        internal_num = re.search('([0-9]+)\.png\"\)$', url).group(1)
+        elems = self.driver.find_elements_by_xpath(self.COMPOSE_FRAME_TABLE.format(internal_num))
+        return len(elems) == 1
+
+    def pick_card(self, num):
+        self.driver.find_element_by_xpath(self.CARDS_BTN).click()
+        cards = self.driver.find_elements_by_xpath(self.CARD_PICK_BTN)
+        cards[num].click()
+
+    def check_card(self, num):
+        cards = self.driver.find_elements_by_xpath(self.CARD_PICK_BTN)
+        url = cards[num].value_of_css_property('background-image')
+        internal_num = re.search('([0-9]+)i\.png\"\)$', url).group(1)
+        self.switch_to_edit()
+        elems = self.driver.find_elements_by_xpath(self.CARD_ELEM.format(internal_num))
+        self.switch_back()
+        return len(elems) == 1
+
+    def check_spelling(self):
+        main_window_handle = None
+        while not main_window_handle:
+            main_window_handle = self.driver.current_window_handle
+        self.driver.find_element_by_xpath(self.SPELLING_BTN).click()
+        spelling_window_handle = None
+        while not spelling_window_handle:
+            for handle in self.driver.window_handles:
+                if handle != main_window_handle:
+                    spelling_window_handle = handle
+                    break
+        self.driver.switch_to.window(spelling_window_handle)
+        text = self.driver.find_elements_by_xpath(self.SPELLING_NO_ERRORS)
+        self.driver.find_element_by_xpath(self.SPELLING_CLOSE_BTN).click()
+        self.driver.switch_to.window(main_window_handle)
+        return len(text) == 1
+
+    def translate(self):
+        main_window_handle = None
+        while not main_window_handle:
+            main_window_handle = self.driver.current_window_handle
+        self.driver.find_element_by_xpath(self.TRANSLATE_BTN).click()
+        spelling_window_handle = None
+        while not spelling_window_handle:
+            for handle in self.driver.window_handles:
+                if handle != main_window_handle:
+                    spelling_window_handle = handle
+                    break
+        self.driver.switch_to.window(spelling_window_handle)
+        self.driver.find_element_by_xpath(self.SAVE_BTN).click()
+        self.driver.switch_to.window(main_window_handle)
+
+    def virtual_keyboard_type(self, text):
+        main_window_handle = None
+        while not main_window_handle:
+            main_window_handle = self.driver.current_window_handle
+        self.driver.find_element_by_xpath(self.MORE_ACTIONS_BTN).click()
+        self.driver.find_element_by_xpath(self.VIRTUAL_KEYBOARD_BTN).click()
+        spelling_window_handle = None
+        while not spelling_window_handle:
+            for handle in self.driver.window_handles:
+                if handle != main_window_handle:
+                    spelling_window_handle = handle
+                    break
+        self.driver.switch_to.window(spelling_window_handle)
+        for ch in text:
+            self.driver.find_element_by_xpath(self.KEYBOARD_KEY_BTN.format(ch)).click()
+        self.driver.find_element_by_xpath(self.SAVE_BTN).click()
+        self.driver.switch_to.window(main_window_handle)

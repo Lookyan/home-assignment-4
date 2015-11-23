@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+
+import time
+
 from login_page import LoginPage
 from compose_page import ComposePage
 from components.header_switcher import HeaderSwitcher
@@ -278,3 +281,34 @@ class WriteLetterTest2(unittest.TestCase):
         self.assertNotEqual(self.content_edit.check_tags(), 0)
         self.content_edit.remove_format()
         self.assertEqual(self.content_edit.check_tags(), 0)
+
+    def test_toolbar_toogle(self):
+        self.content_edit.minimize_toolbar()
+        self.assertEqual(self.content_edit.check_toolbar(), 'small')
+
+        self.content_edit.maximize_toolbar()
+        self.assertEqual(self.content_edit.check_toolbar(), 'big')
+
+    def test_theme(self):
+        theme = 1
+        self.content_edit.pick_theme(theme)
+        self.assertTrue(self.content_edit.check_theme(theme))
+
+    def test_card(self):
+        card = 1
+        self.content_edit.pick_card(card)
+        self.assertTrue(self.content_edit.check_card(card))
+
+    def test_spelling(self):
+        self.content_edit.change_text(u'привет')
+        self.assertTrue(self.content_edit.check_spelling())
+
+    def test_translate(self):
+        self.content_edit.change_text(u'привет')
+        self.content_edit.translate()
+        self.assertEqual(self.content_edit.get_text(), 'hi')
+
+    def test_virtual_keyb(self):
+        self.content_edit.clear_edit()
+        self.content_edit.virtual_keyboard_type(u'привет')
+        self.assertEqual(self.content_edit.get_text(), u'привет')
