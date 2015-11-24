@@ -2,6 +2,7 @@ import unittest
 from login_page import LoginPage
 from compose_page import ComposePage
 from addressbook_page import AddressBookPage
+from addressbook_add_page import AddressBookAddPage
 from time import sleep
 
 from selenium import webdriver
@@ -26,6 +27,7 @@ class WriteLetterTest(unittest.TestCase):
         self.compose_page.open()
 
         self.address_book_page = AddressBookPage(self.driver)
+        self.address_book_add_page = AddressBookAddPage(self.driver)
 
     def tearDown(self):
         self.driver.quit()
@@ -51,8 +53,22 @@ class WriteLetterTest(unittest.TestCase):
     def test_choose_contact_new_window(self):
         self.address_book_page.open()
         toolbar = self.address_book_page.toolbar()
-        toolbar.click_add_button()
-        sleep(3)
+        toolbar.open_group_creation()
+        toolbar.enter_group_name("test")
+        toolbar.create_group()
+
+        self.address_book_add_page.open()
+        contact = self.address_book_add_page.contact()
+        contact.add_contact("Test1", "Test1", "test1@mail.ru", "test")
+
+        self.address_book_page.open()
+        contact.delete_contact("test1@mail.ru")
+        toolbar.group_delete("test")
+
+    def test_address_add_open(self):
+        self.address_book_add_page.open()
+        sleep(100)
+
 
     #1.5
     def test_correct_incorrect_email(self):

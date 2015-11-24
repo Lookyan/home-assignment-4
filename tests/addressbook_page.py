@@ -5,7 +5,7 @@ from components.toolbar import Toolbar
 
 
 class AddressBookPage(Page):
-    PATH = '/addressbook/'
+    PATH = '/addressbook'
 
     def toolbar(self):
         return Toolbar(self.driver)
