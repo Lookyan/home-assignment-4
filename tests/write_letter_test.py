@@ -78,6 +78,25 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
 
+    #1.4.1.2
+    def test_pick_starred_contacts(self):
+        self.address_book_add_page.open()
+        contact = self.address_book_add_page.contact()
+        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
+        self.address_book_page.open()
+        toolbar = self.address_book_page.toolbar()
+        toolbar.star_contact("test1@mail.ru")
+        self.compose_page.open()
+        letter_params = self.compose_page.letter_params()
+        letter_params.click_address_book("To")
+        letter_params.pick_starred_emails()
+        letter_params.pick_all_emails()
+        res = letter_params.is_email_selected()
+        letter_params.leave_confirm_off()
+        self.address_book_page.open()
+        contact.delete_contact("test1@mail.ru")
+        self.assertTrue(res)
+
     #1.4.1.3
     def test_pick_and_unpick_contacts(self):
         self.address_book_add_page.open()
@@ -110,6 +129,8 @@ class WriteLetterTest(unittest.TestCase):
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
+
+
 
 
     def test_choose_contact_new_window(self):

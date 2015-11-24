@@ -24,6 +24,8 @@ class LetterParams(Component):
     PICK_ALL = "//div[@data-name='mainCheck']/div"
     SELECTED_ITEM = "//div[contains(@class, 'messageline_selected')]"
     ADD_CONTACT = "//div[@data-name='add']/span[contains(.,'Добавить')]"
+    GROUP_DROPDOWN = "//div[@class='b-dropdown__ctrl ']/span[contains(.,'Все контакты')]"
+    PICK_STARRED = "//span[contains(., 'Избранные')]"
 
 
     def is_span_right_email(self, email):
@@ -92,6 +94,10 @@ class LetterParams(Component):
     def pick_all_emails(self):
         WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.PICK_ALL))
         self.driver.find_element_by_xpath(self.PICK_ALL).click()
+
+    def pick_starred_emails(self):
+        self.driver.find_element_by_xpath(self.GROUP_DROPDOWN).click()
+        self.driver.find_element_by_xpath(self.PICK_STARRED).click()
 
     def is_email_selected(self):
         return self.check_exists_by_xpath(self.SELECTED_ITEM)

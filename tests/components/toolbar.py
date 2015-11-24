@@ -16,6 +16,7 @@ class Toolbar(Component):
     GROUP_SETTINGS_BUTTON = "//i[contains(@class, 'icon_menu_addressbook_edit')]"
     DELETE_LINK = "//a[contains(., 'Удалить')]"
     CONFIRM_DELETE_BUTTON = "//form/div[@class='popup__controls']/button[@class='btn btn_main confirm-ok']/span[@class='btn__text' and contains(., 'Удалить')]"
+    STAR_ICON = "//div[contains(.,'{0}')]/span/i[contains(@class, 'icon_addressbook_favorite')]"
 
     def new_group(self, name):
         self.open_group_creation()
@@ -49,6 +50,9 @@ class Toolbar(Component):
             self.click_on_elem(xpath)
         except NoSuchElementException:
             self.click_on_elem(xpath)
+
+    def star_contact(self, email):
+        self.driver.find_element_by_xpath(self.STAR_ICON.format(email)).click()
 
     def hov_elem(self, xpath):
         try:
