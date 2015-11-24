@@ -3,8 +3,6 @@ from login_page import LoginPage
 from compose_page import ComposePage
 from addressbook_page import AddressBookPage
 from addressbook_add_page import AddressBookAddPage
-from selenium.webdriver.remote.errorhandler import NoAlertPresentException, UnexpectedAlertPresentException
-from selenium.webdriver.common.keys import Keys
 from time import sleep
 
 from selenium import webdriver
@@ -130,8 +128,26 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
 
+    #1.4.3
+    def test_add_contact_from_group(self):
+        pass
+        #1.4.2 dublicat
 
+    #1.4.5.1
 
+    #1.4.5.2
+    def test_contacts_search(self):
+        self.address_book_add_page.open()
+        contact = self.address_book_add_page.contact()
+        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
+        self.compose_page.open()
+        letter_params = self.compose_page.letter_params()
+        letter_params.click_address_book("To")
+        letter_params.search_contact("test1@mail.ru")
+        res = letter_params.is_results_found()
+        self.address_book_page.open()
+        contact.delete_contact("test1@mail.ru")
+        self.assertTrue(res)
 
     def test_choose_contact_new_window(self):
         self.address_book_page.open()
@@ -145,11 +161,6 @@ class WriteLetterTest(unittest.TestCase):
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
         toolbar.group_delete("test")
-
-    def test_address_add_open(self):
-        self.address_book_add_page.open()
-        sleep(100)
-
 
     #1.5
     def test_correct_incorrect_email(self):

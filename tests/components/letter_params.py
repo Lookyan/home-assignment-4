@@ -3,7 +3,6 @@
 from tests.base import Component
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.remote.errorhandler import StaleElementReferenceException, NoSuchElementException
-from selenium.webdriver.support.expected_conditions import invisibility_of_element_located
 
 
 class LetterParams(Component):
@@ -26,6 +25,8 @@ class LetterParams(Component):
     ADD_CONTACT = "//div[@data-name='add']/span[contains(.,'Добавить')]"
     GROUP_DROPDOWN = "//div[@class='b-dropdown__ctrl ']/span[contains(.,'Все контакты')]"
     PICK_STARRED = "//span[contains(., 'Избранные')]"
+    SEARCH_FIELD = "//input[@id='addressbook__quicklist__search_input']"
+    SEARCH_RES = "//span[@class='highlight-search']"
 
 
     def is_span_right_email(self, email):
@@ -68,7 +69,6 @@ class LetterParams(Component):
         self.driver.find_element_by_xpath(xpath).click()
 
     def choose_contact(self, email, field):
-        # self.unfocus()
         if field == 'To':
             self.click_on_elem(self.RECEIVER_ADDRESS)
         elif field == 'CC':
@@ -104,6 +104,12 @@ class LetterParams(Component):
 
     def click_add_contact(self):
         self.driver.find_element_by_xpath(self.ADD_CONTACT).click()
+
+    def search_contact(self, email):
+        self.driver.find_element_by_xpath(self.SEARCH_FIELD).send_keys(email)
+
+    def is_results_found(self):
+        return self.check_exists_by_xpath(self.SEARCH_RES)
 
     def switch_to_main_window(self):
         window = self.driver.window_handles[0]
