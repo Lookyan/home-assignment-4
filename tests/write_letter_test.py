@@ -3,6 +3,8 @@ from login_page import LoginPage
 from compose_page import ComposePage
 from addressbook_page import AddressBookPage
 from addressbook_add_page import AddressBookAddPage
+from selenium.webdriver.remote.errorhandler import NoAlertPresentException, UnexpectedAlertPresentException
+from selenium.webdriver.common.keys import Keys
 from time import sleep
 
 from selenium import webdriver
@@ -47,15 +49,25 @@ class WriteLetterTest(unittest.TestCase):
 
     #1.3
     def test_choose_contact_js(self):
-        pass
+        self.address_book_add_page.open()
+        contact = self.address_book_add_page.contact()
+        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
+        self.compose_page.open()
+        letter_params = self.compose_page.letter_params()
+        letter_params.choose_contact("test1@mail.ru", 'To')
+        res = letter_params.is_span_right_email("Test1 Test1")
+        letter_params.remove_email_any("test1@mail.ru")
+        letter_params.leave_confirm_off()
+        self.address_book_page.open()
+        contact.delete_contact("test1@mail.ru")
+        self.assertTrue(res)
+
 
     #1.4.1
     def test_choose_contact_new_window(self):
         self.address_book_page.open()
         toolbar = self.address_book_page.toolbar()
-        toolbar.open_group_creation()
-        toolbar.enter_group_name("test")
-        toolbar.create_group()
+        toolbar.new_group("test")
 
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()

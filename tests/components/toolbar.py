@@ -17,6 +17,11 @@ class Toolbar(Component):
     DELETE_LINK = "//a[contains(., 'Удалить')]"
     CONFIRM_DELETE_BUTTON = "//form/div[@class='popup__controls']/button[@class='btn btn_main confirm-ok']/span[@class='btn__text' and contains(., 'Удалить')]"
 
+    def new_group(self, name):
+        self.open_group_creation()
+        self.enter_group_name(name)
+        self.create_group()
+
     def click_add_button(self):
         WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.ADD_BUTTON))
         self.click_on_elem(self.ADD_BUTTON)

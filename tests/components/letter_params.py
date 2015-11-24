@@ -2,11 +2,13 @@
 
 from tests.base import Component
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.remote.errorhandler import StaleElementReferenceException, NoSuchElementException
+from selenium.webdriver.support.expected_conditions import invisibility_of_element_located
 
 
 class LetterParams(Component):
     RECEIVER_ADDRESS = "//textarea[@data-original-name='To']"
-    SPAN_LEGAL_EMAIL = "//span[@class='js-compose-label compose__labels__label' and @data-text='{0}']"
+    SPAN_LEGAL_EMAIL = "//span[@class='js-compose-label compose__labels__label' and contains(@data-text,'{0}')]"
     SPAN_EMAIL_CONTAINS = "//span[@data-text='{0}']"
     SPAN_INVALID_EMAIL = "//span[@class='js-compose-label compose__labels__label compose__labels__label_invalid']"
     GRAY_BOX = "//div[@class='b-compose__head']"
@@ -14,6 +16,8 @@ class LetterParams(Component):
     COPY_ADDRESS = "//textarea[@data-original-name='CC']"
     TOPIC = "//input[@name='Subject']"
     TOPIC_BUTTON = "//label[contains(., 'Тема') and @class='compose__header__label js-label']"
+    CONTACT_DROPDOWN = "//div[@data-original-name='{0}']/div/div[contains(@class, 'js-dropdown-item') and contains(@data-suggest, '{1}')]"
+    REMOVE_ICON_ANY = "//span[@class='js-compose-label compose__labels__label' and contains(@data-text, '{0}')]/i"
 
 
     def is_span_right_email(self, email):
@@ -51,3 +55,30 @@ class LetterParams(Component):
 
     def check_focus_on_topic_input(self):
         return self.driver.find_element_by_xpath(self.TOPIC) == self.driver.switch_to_active_element()
+
+    def focus_on(self, xpath):
+        self.driver.find_element_by_xpath(xpath).click()
+
+    def choose_contact(self, email, field):
+        # self.unfocus()
+        if field == 'To':
+            self.click_on_elem(self.RECEIVER_ADDRESS)
+        elif field == 'CC':
+            self.driver.find_element_by_xpath(self.COPY_ADDRESS).click()
+        dropdown = WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.CONTACT_DROPDOWN.format(field, email)))
+        dropdown.click()
+
+    def remove_email_any(self, sub):
+        self.driver.find_element_by_xpath(self.REMOVE_ICON_ANY.format(sub)).click()
+        # WebDriverWait(self.driver, 10).until(invisibility_of_element_located())
+
+    def leave_confirm_off(self):
+        self.driver.execute_script("window.onbeforeunload = null;")
+
+    def click_on_elem(self, xpath):
+        try:
+            self.driver.find_element_by_xpath(xpath).click()
+        except StaleElementReferenceException:
+            self.click_on_elem(xpath)
+        except NoSuchElementException:
+            self.click_on_elem(xpath)
