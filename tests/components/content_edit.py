@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# coding=UTF-8
+
 import time
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import ActionChains
@@ -23,6 +24,7 @@ class text_to_change(object):
 
 
 class ContentEdit(Component):
+
     IFRAME = "//div[@class='composeEditorFrame']//iframe"
     BASE = "//body[@id='tinymce']"
 
@@ -73,9 +75,10 @@ class ContentEdit(Component):
     COMPOSE_FRAME_TABLE = "//div[contains(@class, 'composeEditorFrame')]/table[@class='mlruTmpId{}']"
     DESIGN_BTN = "//a[contains(@class, 'mce_design')]"
     DESIGN_PICK_BTN = "//div[contains(@class, 'js-decoration_appearance')]//div[contains(@class, 'compose__decoration__slider__item__inner_big')]"
-
+    DESIGN_CLEAR_BTN = "//div[contains(@class, 'js-decoration_appearance')]//li[contains(@class, 'js-clear')]/div"
     CARDS_BTN = "//a[contains(@class, 'mce_cards')]"
     CARD_PICK_BTN = "//div[contains(@class, 'js-decoration_cards')]//div[contains(@class, 'compose__decoration__slider__item__inner_big')]"
+    CARD_CLEAR_BTN = "//div[contains(@class, 'js-decoration_cards')]//li[contains(@class, 'js-clear')]/div"
     CARD_ELEM = BASE + "//img[contains(@src, '/{}.')]"
 
     SPELLING_CLOSE_BTN = "//div[contains(@class, 'mdl-btn') and div[text()='Закрыть']]"
@@ -84,6 +87,7 @@ class ContentEdit(Component):
     KEYBOARD_KEY_BTN = u"//form[@name='keyb']//input[@value='{}']"
 
     def switch_to_edit(self):
+        WebDriverWait(self.driver, 5).until(expected_conditions.presence_of_element_located((By.XPATH, self.IFRAME)))
         self.driver.switch_to_frame(self.driver.find_element_by_xpath(self.IFRAME))
 
     def switch_back(self):
@@ -100,7 +104,9 @@ class ContentEdit(Component):
     def change_text(self, text):
         self.switch_to_edit()
         self._clear_edit()
-        self.driver.find_element_by_xpath(self.BASE).send_keys(text)
+        field = self.driver.find_element_by_xpath(self.BASE)
+        field.send_keys(text)
+        field.click()
         self.switch_back()
 
     def get_text(self):
@@ -325,27 +331,39 @@ class ContentEdit(Component):
         self.driver.find_element_by_xpath(self.DESIGN_BTN).click()
         themes = self.driver.find_elements_by_xpath(self.DESIGN_PICK_BTN)
         themes[num].click()
+        self.driver.find_element_by_xpath(self.DESIGN_BTN).click()
+
+    def delete_theme(self):
+        self.driver.find_element_by_xpath(self.DESIGN_BTN).click()
+        self.driver.find_element_by_xpath(self.DESIGN_CLEAR_BTN).click()
+        self.driver.find_element_by_xpath(self.DESIGN_BTN).click()
 
     def check_theme(self, num):
         themes = self.driver.find_elements_by_xpath(self.DESIGN_PICK_BTN)
         url = themes[num].value_of_css_property('background-image')
-        internal_num = re.search('([0-9]+)\.png\"\)$', url).group(1)
+        internal_num = re.search('([0-9]+)\.[a-z]+\"\)$', url).group(1)
         elems = self.driver.find_elements_by_xpath(self.COMPOSE_FRAME_TABLE.format(internal_num))
-        return len(elems) == 1
+        return len(elems) > 0
 
     def pick_card(self, num):
         self.driver.find_element_by_xpath(self.CARDS_BTN).click()
         cards = self.driver.find_elements_by_xpath(self.CARD_PICK_BTN)
         cards[num].click()
+        self.driver.find_element_by_xpath(self.CARDS_BTN).click()
+
+    def delete_card(self):
+        self.driver.find_element_by_xpath(self.CARDS_BTN).click()
+        self.driver.find_element_by_xpath(self.CARD_CLEAR_BTN).click()
+        self.driver.find_element_by_xpath(self.CARDS_BTN).click()
 
     def check_card(self, num):
         cards = self.driver.find_elements_by_xpath(self.CARD_PICK_BTN)
         url = cards[num].value_of_css_property('background-image')
-        internal_num = re.search('([0-9]+)i\.png\"\)$', url).group(1)
+        internal_num = re.search('([0-9]+)i\.[a-z]+\"\)$', url).group(1)
         self.switch_to_edit()
         elems = self.driver.find_elements_by_xpath(self.CARD_ELEM.format(internal_num))
         self.switch_back()
-        return len(elems) == 1
+        return len(elems) > 0
 
     def check_spelling(self):
         main_window_handle = None
