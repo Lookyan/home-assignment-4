@@ -8,6 +8,7 @@ from components.letter_params import LetterParams
 from components.header_switcher import HeaderSwitcher
 from components.content_edit import ContentEdit
 from components.main_toolbar import MainToolbar
+from components.sent_letter import SentLetter
 
 
 class ComposePage(Page):
@@ -29,3 +30,6 @@ class ComposePage(Page):
 
     def main_toolbar(self):
         return MainToolbar(self.driver)
+
+    def sent_letter(self):
+        return SentLetter(self.driver)
