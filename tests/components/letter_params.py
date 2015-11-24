@@ -18,6 +18,12 @@ class LetterParams(Component):
     TOPIC_BUTTON = "//label[contains(., 'Тема') and @class='compose__header__label js-label']"
     CONTACT_DROPDOWN = "//div[@data-original-name='{0}']/div/div[contains(@class, 'js-dropdown-item') and contains(@data-suggest, '{1}')]"
     REMOVE_ICON_ANY = "//span[@class='js-compose-label compose__labels__label' and contains(@data-text, '{0}')]/i"
+    ADDRESSBOOK_CHOOSE_BUTTON = "//div[@title='Адресная книга' and @data-type='{0}']"
+
+    PICK_BY_EMAIL = "//div[contains(., '{0}')]/label/input[@title='Выбрать']"
+    PICK_ALL = "//div[@data-name='mainCheck']/div"
+    SELECTED_ITEM = "//div[contains(@class, 'messageline_selected')]"
+    ADD_CONTACT = "//div[@data-name='add']/span[contains(.,'Добавить')]"
 
 
     def is_span_right_email(self, email):
@@ -74,6 +80,28 @@ class LetterParams(Component):
 
     def leave_confirm_off(self):
         self.driver.execute_script("window.onbeforeunload = null;")
+
+    def click_address_book(self, type):
+        self.driver.find_element_by_xpath(self.ADDRESSBOOK_CHOOSE_BUTTON.format(type)).click()
+        window = self.driver.window_handles[1]
+        self.driver.switch_to_window(window)
+
+    def pick_by_email(self, email):
+        self.driver.find_element_by_xpath(self.PICK_BY_EMAIL.format(email)).click()
+
+    def pick_all_emails(self):
+        WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.PICK_ALL))
+        self.driver.find_element_by_xpath(self.PICK_ALL).click()
+
+    def is_email_selected(self):
+        return self.check_exists_by_xpath(self.SELECTED_ITEM)
+
+    def click_add_contact(self):
+        self.driver.find_element_by_xpath(self.ADD_CONTACT).click()
+
+    def switch_to_main_window(self):
+        window = self.driver.window_handles[0]
+        self.driver.switch_to_window(window)
 
     def click_on_elem(self, xpath):
         try:
