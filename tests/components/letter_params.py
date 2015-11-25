@@ -109,6 +109,7 @@ class LetterParams(Component):
         self.driver.find_element_by_xpath(self.PICK_ALL).click()
 
     def pick_starred_emails(self):
+        WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.GROUP_DROPDOWN))
         self.driver.find_element_by_xpath(self.GROUP_DROPDOWN).click()
         self.driver.find_element_by_xpath(self.PICK_STARRED).click()
 
