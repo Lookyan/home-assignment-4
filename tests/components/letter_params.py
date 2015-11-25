@@ -78,12 +78,12 @@ class LetterParams(Component):
 
     def remove_email_any(self, sub):
         self.driver.find_element_by_xpath(self.REMOVE_ICON_ANY.format(sub)).click()
-        # WebDriverWait(self.driver, 10).until(invisibility_of_element_located())
 
     def leave_confirm_off(self):
         self.driver.execute_script("window.onbeforeunload = null;")
 
     def click_address_book(self, type):
+        WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.ADDRESSBOOK_CHOOSE_BUTTON.format(type)))
         self.driver.find_element_by_xpath(self.ADDRESSBOOK_CHOOSE_BUTTON.format(type)).click()
         window = self.driver.window_handles[1]
         self.driver.switch_to_window(window)
@@ -106,6 +106,7 @@ class LetterParams(Component):
         self.driver.find_element_by_xpath(self.ADD_CONTACT).click()
 
     def search_contact(self, email):
+        WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.SEARCH_FIELD))
         self.driver.find_element_by_xpath(self.SEARCH_FIELD).send_keys(email)
 
     def is_results_found(self):
