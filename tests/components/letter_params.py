@@ -3,6 +3,7 @@
 from tests.base import Component
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.remote.errorhandler import StaleElementReferenceException, NoSuchElementException
+import re
 
 
 class LetterParams(Component):
@@ -27,6 +28,8 @@ class LetterParams(Component):
     PICK_STARRED = "//span[contains(., 'Избранные')]"
     SEARCH_FIELD = "//input[@id='addressbook__quicklist__search_input']"
     SEARCH_RES = "//span[@class='highlight-search']"
+    CONT_NUMBER = "//span[@class='messagelist__messages__message']"
+    CONTACT_LINES = "//div[@class='messageline contactline']"
 
 
     def is_span_right_email(self, email):
@@ -51,9 +54,11 @@ class LetterParams(Component):
         return WebDriverWait(self.driver, 10).until_not(lambda s: s.find_element_by_xpath(email))
 
     def enter_copy_email(self, email):
+        WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.COPY_ADDRESS))
         self.driver.find_element_by_xpath(self.COPY_ADDRESS).send_keys(email + " ")
 
     def enter_topic(self, text):
+        WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.TOPIC))
         self.driver.find_element_by_xpath(self.TOPIC).send_keys(text)
 
     def check_topic_text(self, text):
@@ -89,6 +94,7 @@ class LetterParams(Component):
         self.driver.switch_to_window(window)
 
     def pick_by_email(self, email):
+        WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.PICK_BY_EMAIL.format(email)))
         self.driver.find_element_by_xpath(self.PICK_BY_EMAIL.format(email)).click()
 
     def pick_all_emails(self):
@@ -108,9 +114,19 @@ class LetterParams(Component):
     def search_contact(self, email):
         WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.SEARCH_FIELD))
         self.driver.find_element_by_xpath(self.SEARCH_FIELD).send_keys(email)
+        WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.SEARCH_RES))
 
     def is_results_found(self):
         return self.check_exists_by_xpath(self.SEARCH_RES)
+
+    def number_of_contacts(self):
+        WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.CONT_NUMBER))
+        text = self.driver.find_element_by_xpath(self.CONT_NUMBER).text
+        if not text:
+            return False
+        number = re.findall(r'\d+', text)[0]
+        lines = len(self.driver.find_elements_by_xpath(self.CONTACT_LINES))
+        return int(number) == int(lines)
 
     def switch_to_main_window(self):
         window = self.driver.window_handles[0]

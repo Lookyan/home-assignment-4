@@ -160,18 +160,36 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
 
-    def test_choose_contact_new_window(self):
-        self.address_book_page.open()
-        toolbar = self.address_book_page.toolbar()
-        toolbar.new_group("test")
-
+    #1.4.6
+    def test_contact_pick_by_search(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
-        contact.add_contact("Test1", "Test1", "test1@mail.ru", "test")
-
+        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
+        self.compose_page.open()
+        letter_params = self.compose_page.letter_params()
+        letter_params.click_address_book("To")
+        letter_params.search_contact("Test1 Test1")
+        letter_params.pick_by_email("test1@mail.ru")
+        letter_params.click_add_contact()
+        letter_params.switch_to_main_window()
+        res = letter_params.is_span_right_email("test1@mail.ru")
+        letter_params.leave_confirm_off()
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
-        toolbar.group_delete("test")
+        self.assertTrue(res)
+
+    #1.4.7
+    def test_number_of_contacts(self):
+        self.address_book_add_page.open()
+        contact = self.address_book_add_page.contact()
+        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
+        self.compose_page.open()
+        letter_params = self.compose_page.letter_params()
+        letter_params.click_address_book("To")
+        res = letter_params.number_of_contacts()
+        self.address_book_page.open()
+        contact.delete_contact("test1@mail.ru")
+        self.assertTrue(res)
 
     #1.5
     def test_correct_incorrect_email(self):
@@ -253,3 +271,6 @@ class WriteLetterTest(unittest.TestCase):
         letter_params = self.compose_page.letter_params()
         letter_params.enter_topic("Lorem ipsum")
         self.assertTrue(letter_params.check_topic_text("Lorem ipsum"))
+
+
+    #helper funcs:
