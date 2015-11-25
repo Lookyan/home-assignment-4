@@ -1,23 +1,28 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+import os
 from login_page import LoginPage
 from compose_page import ComposePage
 from addressbook_page import AddressBookPage
 from addressbook_add_page import AddressBookAddPage
 from components.header_switcher import HeaderSwitcher
-from templates_page import TemplatesPage
+from selenium.webdriver import DesiredCapabilities, Remote
 from drafts_page import DraftsPage
 
 from selenium import webdriver
 
 
 class WriteLetterTest(unittest.TestCase):
-    EMAIL = 'lewn01'
-    PASSWORD = 'abcd12345'
+    EMAIL = os.environ['TTHA4LOGIN']
+    PASSWORD = os.environ['TTHA4PASSWORD']
+    BROWSER = os.environ['TTHA4BROWSER']
 
     def setUp(self):
-        self.driver = webdriver.Firefox()
+        self.driver = Remote(
+            command_executor='http://127.0.0.1:4444/wd/hub',
+            desired_capabilities=getattr(DesiredCapabilities, self.BROWSER).copy()
+        )
 
         login_page = LoginPage(self.driver)
         login_page.open()
@@ -41,20 +46,18 @@ class WriteLetterTest(unittest.TestCase):
     def tearDown(self):
         self.driver.quit()
 
-    #1.1
+
     def test_receiver_field(self):
         letter_params = self.compose_page.letter_params()
         letter_params.set_to_addr("test@mail.ru")
         self.assertTrue(letter_params.is_span_right_email("test@mail.ru"))
 
-    #1.2
     def test_receiver_field_wrong_email(self):
         letter_params = self.compose_page.letter_params()
         letter_params.set_to_addr("wrongemail.ru")
         letter_params.unfocus()
         self.assertTrue(letter_params.is_span_wrong_email())
 
-    #1.3
     def test_choose_contact_js(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
@@ -65,7 +68,6 @@ class WriteLetterTest(unittest.TestCase):
         self.assertTrue(res)
 
 
-    #1.4.1.1
     def test_pick_all_contacts(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
@@ -75,7 +77,6 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
 
-    #1.4.1.2
     def test_pick_starred_contacts(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
@@ -85,7 +86,6 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
 
-    #1.4.1.3
     def test_pick_and_unpick_contacts(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
@@ -95,7 +95,6 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(not res)
 
-    #1.4.2
     def test_add_contact_from_address_book(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
@@ -105,7 +104,6 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
 
-    #1.4.5.1
     def test_search_by_fio(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
@@ -115,7 +113,6 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
 
-    #1.4.5.2
     def test_contacts_search(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
@@ -125,7 +122,6 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
 
-    #1.4.6
     def test_contact_pick_by_search(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
@@ -135,7 +131,6 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
 
-    #1.4.7
     def test_number_of_contacts(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
@@ -145,7 +140,6 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
 
-    #1.5
     def test_correct_incorrect_email(self):
         letter_params = self.compose_page.letter_params()
         letter_params.set_to_addr("test@mail.ru")
@@ -155,7 +149,6 @@ class WriteLetterTest(unittest.TestCase):
         self.assertTrue(letter_params.is_span_right_email("test@mail.ru"))
         self.assertTrue(letter_params.is_span_wrong_email())
 
-    #1.7
     def test_enter_equal_emails(self):
         letter_params = self.compose_page.letter_params()
         letter_params.set_to_addr("test@mail.ru")
@@ -164,7 +157,6 @@ class WriteLetterTest(unittest.TestCase):
         letter_params.unfocus()
         self.assertEqual(1, letter_params.count_emails("test@mail.ru"))
 
-    #1.8
     def test_email_remove(self):
         letter_params = self.compose_page.letter_params()
         letter_params.set_to_addr("test@mail.ru")
@@ -172,20 +164,17 @@ class WriteLetterTest(unittest.TestCase):
         letter_params.remove_email("test@mail.ru")
         self.assertTrue(letter_params.check_email_removal("test@mail.ru"))
 
-    #2.1
     def test_copy_field(self):
         letter_params = self.compose_page.letter_params()
         letter_params.enter_copy_email("test@mail.ru")
         self.assertTrue(letter_params.is_span_right_email("test@mail.ru"))
 
-    #2.2
     def test_copy_incorrect_email(self):
         letter_params = self.compose_page.letter_params()
         letter_params.enter_copy_email("wrongemail.ru")
         letter_params.unfocus()
         self.assertTrue(letter_params.is_span_wrong_email())
-        
-    #2.3
+
     def test_choose_contact_js_cc(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
@@ -195,8 +184,6 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
 
-
-    #2.4.1.1
     def test_pick_all_contacts_cc(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
@@ -206,7 +193,6 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
 
-    #2.4.1.2
     def test_pick_starred_contacts_cc(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
@@ -216,7 +202,6 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
 
-    #2.4.1.3
     def test_pick_and_unpick_contacts_cc(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
@@ -226,7 +211,6 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(not res)
 
-    #2.4.2
     def test_add_contact_from_address_book_cc(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
@@ -236,7 +220,6 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
 
-    #2.4.5.1
     def test_search_by_fio_cc(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
@@ -246,7 +229,6 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
 
-    #2.4.5.2
     def test_contacts_search_cc(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
@@ -256,7 +238,6 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
 
-    #2.4.6
     def test_contact_pick_by_search_cc(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
@@ -266,7 +247,6 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
 
-    #2.4.7
     def test_number_of_contacts_cc(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
@@ -276,7 +256,6 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
 
-    #2.6
     def test_copy_correct_incorrect(self):
         letter_params = self.compose_page.letter_params()
         letter_params.enter_copy_email("test@mail.ru")
@@ -286,7 +265,6 @@ class WriteLetterTest(unittest.TestCase):
         self.assertTrue(letter_params.is_span_right_email("test@mail.ru"))
         self.assertTrue(letter_params.is_span_wrong_email())
 
-    #2.7
     def test_copy_equal_emails(self):
         letter_params = self.compose_page.letter_params()
         letter_params.enter_copy_email("test@mail.ru")
@@ -295,7 +273,6 @@ class WriteLetterTest(unittest.TestCase):
         letter_params.unfocus()
         self.assertEqual(1, letter_params.count_emails("test@mail.ru"))
 
-    #2.8
     def test_copy_addr_removal(self):
         letter_params = self.compose_page.letter_params()
         letter_params.enter_copy_email("test@mail.ru")
@@ -303,20 +280,17 @@ class WriteLetterTest(unittest.TestCase):
         letter_params.remove_email("test@mail.ru")
         self.assertTrue(letter_params.check_email_removal("test@mail.ru"))
 
-    #3.1
     def test_hidden_copy_field(self):
         letter_params = self.compose_page.letter_params()
         letter_params.enter_hidden_copy_email("test@mail.ru")
         self.assertTrue(letter_params.is_span_right_email("test@mail.ru"))
 
-    #3.2
     def test_hidden_copy_incorrect_email(self):
         letter_params = self.compose_page.letter_params()
         letter_params.enter_hidden_copy_email("wrongemail.ru")
         letter_params.unfocus()
         self.assertTrue(letter_params.is_span_wrong_email())
 
-    #3.6
     def test_hidden_copy_correct_incorrect(self):
         letter_params = self.compose_page.letter_params()
         letter_params.enter_hidden_copy_email("test@mail.ru")
@@ -326,7 +300,6 @@ class WriteLetterTest(unittest.TestCase):
         self.assertTrue(letter_params.is_span_right_email("test@mail.ru"))
         self.assertTrue(letter_params.is_span_wrong_email())
 
-    #3.7
     def test_hidden_copy_equal_emails(self):
         letter_params = self.compose_page.letter_params()
         letter_params.enter_hidden_copy_email("test@mail.ru")
@@ -335,7 +308,6 @@ class WriteLetterTest(unittest.TestCase):
         letter_params.unfocus()
         self.assertEqual(1, letter_params.count_emails("test@mail.ru"))
 
-    #3.8
     def test_hidden_copy_addr_removal(self):
         letter_params = self.compose_page.letter_params()
         letter_params.enter_hidden_copy_email("test@mail.ru")
@@ -343,13 +315,11 @@ class WriteLetterTest(unittest.TestCase):
         letter_params.remove_email("test@mail.ru")
         self.assertTrue(letter_params.check_email_removal("test@mail.ru"))
 
-    #4.1
     def test_focus_via_topic_click(self):
         letter_params = self.compose_page.letter_params()
         letter_params.click_topic_for_focus()
         self.assertTrue(letter_params.check_focus_on_topic_input())
 
-    #4.2
     def test_topic_field(self):
         letter_params = self.compose_page.letter_params()
         letter_params.enter_topic("Lorem ipsum")
