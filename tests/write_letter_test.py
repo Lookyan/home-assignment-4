@@ -127,10 +127,6 @@ class WriteLetterTest(unittest.TestCase):
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
 
-    #1.4.3
-    def test_add_contact_from_group(self):
-        pass
-        #1.4.2 dublicat
 
     #1.4.5.1
     def test_search_by_fio(self):
@@ -259,6 +255,44 @@ class WriteLetterTest(unittest.TestCase):
         self.assertTrue(letter_params.check_email_removal("test@mail.ru"))
 
     #3.1
+    def test_hidden_copy_field(self):
+        letter_params = self.compose_page.letter_params()
+        letter_params.enter_hidden_copy_email("test@mail.ru")
+        self.assertTrue(letter_params.is_span_right_email("test@mail.ru"))
+
+    #3.2
+    def test_hidden_copy_incorrect_email(self):
+        letter_params = self.compose_page.letter_params()
+        letter_params.enter_hidden_copy_email("wrongemail.ru")
+        letter_params.unfocus()
+        self.assertTrue(letter_params.is_span_wrong_email())
+
+    #3.6
+    def test_hidden_copy_correct_incorrect(self):
+        letter_params = self.compose_page.letter_params()
+        letter_params.enter_hidden_copy_email("test@mail.ru")
+        letter_params.unfocus()
+        letter_params.enter_hidden_copy_email("wrongemail.ru")
+        letter_params.unfocus()
+        self.assertTrue(letter_params.is_span_right_email("test@mail.ru"))
+        self.assertTrue(letter_params.is_span_wrong_email())
+
+    #3.7
+    def test_hidden_copy_equal_emails(self):
+        letter_params = self.compose_page.letter_params()
+        letter_params.enter_hidden_copy_email("test@mail.ru")
+        letter_params.unfocus()
+        letter_params.enter_hidden_copy_email("test@mail.ru")
+        letter_params.unfocus()
+        self.assertEqual(1, letter_params.count_emails("test@mail.ru"))
+
+    #3.8
+    def test_hidden_copy_addr_removal(self):
+        letter_params = self.compose_page.letter_params()
+        letter_params.enter_hidden_copy_email("test@mail.ru")
+        letter_params.unfocus()
+        letter_params.remove_email("test@mail.ru")
+        self.assertTrue(letter_params.check_email_removal("test@mail.ru"))
 
     #4.1
     def test_focus_via_topic_click(self):

@@ -14,6 +14,7 @@ class LetterParams(Component):
     GRAY_BOX = "//div[@class='b-compose__head']"
     REMOVE_ICON = "//span[@class='js-compose-label compose__labels__label' and @data-text='{0}']/i"
     COPY_ADDRESS = "//textarea[@data-original-name='CC']"
+    HIDDEN_COPY_ADDRESS = "//textarea[@data-original-name='BCC']"
     TOPIC = "//input[@name='Subject']"
     TOPIC_BUTTON = "//label[contains(., 'Тема') and @class='compose__header__label js-label']"
     CONTACT_DROPDOWN = "//div[@data-original-name='{0}']/div/div[contains(@class, 'js-dropdown-item') and contains(@data-suggest, '{1}')]"
@@ -36,6 +37,7 @@ class LetterParams(Component):
         return self.check_exists_by_xpath(self.SPAN_LEGAL_EMAIL.format(email))
 
     def is_span_wrong_email(self):
+        WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.SPAN_INVALID_EMAIL))
         return self.check_exists_by_xpath(self.SPAN_INVALID_EMAIL)
 
     def set_to_addr(self, address):
@@ -48,6 +50,7 @@ class LetterParams(Component):
         return len(self.driver.find_elements_by_xpath(self.SPAN_EMAIL_CONTAINS.format(email)))
 
     def remove_email(self, email):
+        WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.REMOVE_ICON.format(email)))
         self.driver.find_element_by_xpath(self.REMOVE_ICON.format(email)).click()
 
     def check_email_removal(self, email):
@@ -56,6 +59,10 @@ class LetterParams(Component):
     def enter_copy_email(self, email):
         WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.COPY_ADDRESS))
         self.driver.find_element_by_xpath(self.COPY_ADDRESS).send_keys(email + " ")
+
+    def enter_hidden_copy_email(self, email):
+        WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.HIDDEN_COPY_ADDRESS))
+        self.driver.find_element_by_xpath(self.HIDDEN_COPY_ADDRESS).send_keys(email + " ")
 
     def enter_topic(self, text):
         WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.TOPIC))
