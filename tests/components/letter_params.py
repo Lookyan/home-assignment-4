@@ -84,7 +84,7 @@ class LetterParams(Component):
         if field == 'To':
             self.click_on_elem(self.RECEIVER_ADDRESS)
         elif field == 'CC':
-            self.driver.find_element_by_xpath(self.COPY_ADDRESS).click()
+            self.click_on_elem(self.COPY_ADDRESS)
         dropdown = WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.CONTACT_DROPDOWN.format(field, email)))
         dropdown.click()
 

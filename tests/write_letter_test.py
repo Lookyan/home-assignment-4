@@ -174,6 +174,97 @@ class WriteLetterTest(unittest.TestCase):
         letter_params.enter_copy_email("wrongemail.ru")
         letter_params.unfocus()
         self.assertTrue(letter_params.is_span_wrong_email())
+        
+    #2.3
+    def test_choose_contact_js_cc(self):
+        self.address_book_add_page.open()
+        contact = self.address_book_add_page.contact()
+        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
+        res = self.choose_by_js('CC')
+        self.address_book_page.open()
+        contact.delete_contact("test1@mail.ru")
+        self.assertTrue(res)
+
+
+    #2.4.1.1
+    def test_pick_all_contacts_cc(self):
+        self.address_book_add_page.open()
+        contact = self.address_book_add_page.contact()
+        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
+        res = self.pick_emails('CC')
+        self.address_book_page.open()
+        contact.delete_contact("test1@mail.ru")
+        self.assertTrue(res)
+
+    #2.4.1.2
+    def test_pick_starred_contacts_cc(self):
+        self.address_book_add_page.open()
+        contact = self.address_book_add_page.contact()
+        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
+        res = self.pick_starred()
+        self.address_book_page.open()
+        contact.delete_contact("test1@mail.ru")
+        self.assertTrue(res)
+
+    #2.4.1.3
+    def test_pick_and_unpick_contacts_cc(self):
+        self.address_book_add_page.open()
+        contact = self.address_book_add_page.contact()
+        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
+        res = self.pick_unpick('CC')
+        self.address_book_page.open()
+        contact.delete_contact("test1@mail.ru")
+        self.assertTrue(not res)
+
+    #2.4.2
+    def test_add_contact_from_address_book_cc(self):
+        self.address_book_add_page.open()
+        contact = self.address_book_add_page.contact()
+        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
+        res = self.add_contact('CC')
+        self.address_book_page.open()
+        contact.delete_contact("test1@mail.ru")
+        self.assertTrue(res)
+
+    #2.4.5.1
+    def test_search_by_fio_cc(self):
+        self.address_book_add_page.open()
+        contact = self.address_book_add_page.contact()
+        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
+        res = self.search_fio('CC')
+        self.address_book_page.open()
+        contact.delete_contact("test1@mail.ru")
+        self.assertTrue(res)
+
+    #2.4.5.2
+    def test_contacts_search_cc(self):
+        self.address_book_add_page.open()
+        contact = self.address_book_add_page.contact()
+        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
+        res = self.search_email('CC')
+        self.address_book_page.open()
+        contact.delete_contact("test1@mail.ru")
+        self.assertTrue(res)
+
+    #2.4.6
+    def test_contact_pick_by_search_cc(self):
+        self.address_book_add_page.open()
+        contact = self.address_book_add_page.contact()
+        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
+        res = self.search_and_pick('CC')
+        self.address_book_page.open()
+        contact.delete_contact("test1@mail.ru")
+        self.assertTrue(res)
+
+    #2.4.7
+    def test_number_of_contacts_cc(self):
+        self.address_book_add_page.open()
+        contact = self.address_book_add_page.contact()
+        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
+        res = self.number_of_cont('CC')
+        self.address_book_page.open()
+        contact.delete_contact("test1@mail.ru")
+        self.assertTrue(res)
 
     #2.6
     def test_copy_correct_incorrect(self):
