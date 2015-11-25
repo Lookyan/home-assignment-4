@@ -1,4 +1,7 @@
 # coding=UTF-8
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
 
 from tests.base import Component
 
@@ -25,9 +28,11 @@ class HeaderSwitcher(Component):
     #     self.dropdown_button = self.driver.find_element_by_xpath(self.DROPDOWN_BUTTON)
 
     def get_dropdown_button(self):
+        WebDriverWait(self.driver, 3).until(expected_conditions.presence_of_element_located((By.XPATH, self.DROPDOWN_BUTTON)))
         return self.driver.find_element_by_xpath(self.DROPDOWN_BUTTON)
 
     def get_dropdown_list_element(self, elem):
+        WebDriverWait(self.driver, 3).until(expected_conditions.presence_of_element_located((By.XPATH, self.DROPDOWN_LIST_ELEMENT.format(elem))))
         return self.driver.find_element_by_xpath(self.DROPDOWN_LIST_ELEMENT.format(elem))
 
     def get_row(self, row):
