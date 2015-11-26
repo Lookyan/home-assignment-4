@@ -117,8 +117,7 @@ class ContentEdit(Component):
 
     def send_backspaces(self, num):
         self.switch_to_edit()
-        for _ in xrange(num):
-            self.driver.find_element_by_xpath(self.BASE).send_keys('\b')
+        self.driver.find_element_by_xpath(self.BASE).send_keys('\b' * num)
         self.switch_back()
 
     def select_text(self):
