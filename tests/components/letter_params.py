@@ -44,7 +44,7 @@ class LetterParams(Component):
         self.driver.find_element_by_xpath(self.RECEIVER_ADDRESS).send_keys(address + " ")
 
     def unfocus(self):
-        self.driver.find_element_by_xpath(self.GRAY_BOX).click()
+        self.driver.find_element_by_xpath(self.TOPIC).click()
 
     def count_emails(self, email):
         return len(self.driver.find_elements_by_xpath(self.SPAN_EMAIL_CONTAINS.format(email)))
@@ -102,7 +102,7 @@ class LetterParams(Component):
 
     def pick_by_email(self, email):
         WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.PICK_BY_EMAIL.format(email)))
-        self.driver.find_element_by_xpath(self.PICK_BY_EMAIL.format(email)).click()
+        self.click_on_elem(self.PICK_BY_EMAIL.format(email))
 
     def pick_all_emails(self):
         WebDriverWait(self.driver, 10).until(lambda s: s.find_element_by_xpath(self.PICK_ALL))
