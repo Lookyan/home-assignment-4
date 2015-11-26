@@ -61,7 +61,7 @@ class WriteLetterTest(unittest.TestCase):
     def test_choose_contact_js(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
-        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
+        contact.is_contact_added("Test1", "Test1", "test1@mail.ru", "")
         res = self.choose_by_js('To')
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
@@ -71,8 +71,8 @@ class WriteLetterTest(unittest.TestCase):
     def test_pick_all_contacts(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
-        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
-        res = self.pick_emails('To')
+        contact.is_contact_added("Test1", "Test1", "test1@mail.ru", "")
+        res = self.is_picked_emails('To')
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
@@ -80,8 +80,8 @@ class WriteLetterTest(unittest.TestCase):
     def test_pick_starred_contacts(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
-        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
-        res = self.pick_starred('To')
+        contact.is_contact_added("Test1", "Test1", "test1@mail.ru", "")
+        res = self.is_pick_starred('To')
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
@@ -89,8 +89,8 @@ class WriteLetterTest(unittest.TestCase):
     def test_pick_and_unpick_contacts(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
-        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
-        res = self.pick_unpick('To')
+        contact.is_contact_added("Test1", "Test1", "test1@mail.ru", "")
+        res = self.is_pick_unpicked('To')
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(not res)
@@ -98,8 +98,8 @@ class WriteLetterTest(unittest.TestCase):
     def test_add_contact_from_address_book(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
-        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
-        res = self.add_contact('To')
+        contact.is_contact_added("Test1", "Test1", "test1@mail.ru", "")
+        res = self.is_contact_added('To')
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
@@ -107,8 +107,8 @@ class WriteLetterTest(unittest.TestCase):
     def test_search_by_fio(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
-        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
-        res = self.search_fio('To')
+        contact.is_contact_added("Test1", "Test1", "test1@mail.ru", "")
+        res = self.is_search_fio_appears('To')
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
@@ -116,8 +116,8 @@ class WriteLetterTest(unittest.TestCase):
     def test_contacts_search(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
-        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
-        res = self.search_email('To')
+        contact.is_contact_added("Test1", "Test1", "test1@mail.ru", "")
+        res = self.is_search_email_found('To')
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
@@ -125,8 +125,8 @@ class WriteLetterTest(unittest.TestCase):
     def test_contact_pick_by_search(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
-        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
-        res = self.search_and_pick('To')
+        contact.is_contact_added("Test1", "Test1", "test1@mail.ru", "")
+        res = self.is_search_and_picked('To')
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
@@ -134,8 +134,8 @@ class WriteLetterTest(unittest.TestCase):
     def test_number_of_contacts(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
-        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
-        res = self.number_of_cont('To')
+        contact.is_contact_added("Test1", "Test1", "test1@mail.ru", "")
+        res = self.is_number_of_cont_equal('To')
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
@@ -178,7 +178,7 @@ class WriteLetterTest(unittest.TestCase):
     def test_choose_contact_js_cc(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
-        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
+        contact.is_contact_added("Test1", "Test1", "test1@mail.ru", "")
         res = self.choose_by_js('CC')
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
@@ -187,8 +187,8 @@ class WriteLetterTest(unittest.TestCase):
     def test_pick_all_contacts_cc(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
-        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
-        res = self.pick_emails('CC')
+        contact.is_contact_added("Test1", "Test1", "test1@mail.ru", "")
+        res = self.is_picked_emails('CC')
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
@@ -196,8 +196,8 @@ class WriteLetterTest(unittest.TestCase):
     def test_pick_starred_contacts_cc(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
-        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
-        res = self.pick_starred('CC')
+        contact.is_contact_added("Test1", "Test1", "test1@mail.ru", "")
+        res = self.is_pick_starred('CC')
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
@@ -205,8 +205,8 @@ class WriteLetterTest(unittest.TestCase):
     def test_pick_and_unpick_contacts_cc(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
-        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
-        res = self.pick_unpick('CC')
+        contact.is_contact_added("Test1", "Test1", "test1@mail.ru", "")
+        res = self.is_pick_unpicked('CC')
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(not res)
@@ -214,8 +214,8 @@ class WriteLetterTest(unittest.TestCase):
     def test_add_contact_from_address_book_cc(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
-        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
-        res = self.add_contact('CC')
+        contact.is_contact_added("Test1", "Test1", "test1@mail.ru", "")
+        res = self.is_contact_added('CC')
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
@@ -223,8 +223,8 @@ class WriteLetterTest(unittest.TestCase):
     def test_search_by_fio_cc(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
-        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
-        res = self.search_fio('CC')
+        contact.is_contact_added("Test1", "Test1", "test1@mail.ru", "")
+        res = self.is_search_fio_appears('CC')
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
@@ -232,8 +232,8 @@ class WriteLetterTest(unittest.TestCase):
     def test_contacts_search_cc(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
-        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
-        res = self.search_email('CC')
+        contact.is_contact_added("Test1", "Test1", "test1@mail.ru", "")
+        res = self.is_search_email_found('CC')
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
@@ -241,8 +241,8 @@ class WriteLetterTest(unittest.TestCase):
     def test_contact_pick_by_search_cc(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
-        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
-        res = self.search_and_pick('CC')
+        contact.is_contact_added("Test1", "Test1", "test1@mail.ru", "")
+        res = self.is_search_and_picked('CC')
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
@@ -250,8 +250,8 @@ class WriteLetterTest(unittest.TestCase):
     def test_number_of_contacts_cc(self):
         self.address_book_add_page.open()
         contact = self.address_book_add_page.contact()
-        contact.add_contact("Test1", "Test1", "test1@mail.ru", "")
-        res = self.number_of_cont('CC')
+        contact.is_contact_added("Test1", "Test1", "test1@mail.ru", "")
+        res = self.is_number_of_cont_equal('CC')
         self.address_book_page.open()
         contact.delete_contact("test1@mail.ru")
         self.assertTrue(res)
@@ -637,7 +637,7 @@ class WriteLetterTest(unittest.TestCase):
         letter_params.leave_confirm_off()
         return res
 
-    def pick_emails(self, type_field):
+    def is_picked_emails(self, type_field):
         self.compose_page.open()
         letter_params = self.compose_page.letter_params()
         letter_params.click_address_book(type_field)
@@ -646,7 +646,7 @@ class WriteLetterTest(unittest.TestCase):
         letter_params.leave_confirm_off()
         return res
 
-    def pick_starred(self, type_field):
+    def is_pick_starred(self, type_field):
         self.address_book_page.open()
         toolbar = self.address_book_page.toolbar()
         toolbar.star_contact("test1@mail.ru")
@@ -659,7 +659,7 @@ class WriteLetterTest(unittest.TestCase):
         letter_params.leave_confirm_off()
         return res
 
-    def pick_unpick(self, type_field):
+    def is_pick_unpicked(self, type_field):
         self.compose_page.open()
         letter_params = self.compose_page.letter_params()
         letter_params.click_address_book(type_field)
@@ -669,7 +669,7 @@ class WriteLetterTest(unittest.TestCase):
         letter_params.leave_confirm_off()
         return res
 
-    def add_contact(self, type_field):
+    def is_contact_added(self, type_field):
         self.compose_page.open()
         letter_params = self.compose_page.letter_params()
         letter_params.click_address_book(type_field)
@@ -680,7 +680,7 @@ class WriteLetterTest(unittest.TestCase):
         letter_params.leave_confirm_off()
         return res
 
-    def search_fio(self, type_field):
+    def is_search_fio_appears(self, type_field):
         self.compose_page.open()
         letter_params = self.compose_page.letter_params()
         letter_params.click_address_book(type_field)
@@ -688,7 +688,7 @@ class WriteLetterTest(unittest.TestCase):
         res = letter_params.is_results_found()
         return res
 
-    def search_email(self, type_field):
+    def is_search_email_found(self, type_field):
         self.compose_page.open()
         letter_params = self.compose_page.letter_params()
         letter_params.click_address_book(type_field)
@@ -696,14 +696,14 @@ class WriteLetterTest(unittest.TestCase):
         res = letter_params.is_results_found()
         return res
 
-    def number_of_cont(self, type_field):
+    def is_number_of_cont_equal(self, type_field):
         self.compose_page.open()
         letter_params = self.compose_page.letter_params()
         letter_params.click_address_book(type_field)
         res = letter_params.number_of_contacts()
         return res
 
-    def search_and_pick(self, type_field):
+    def is_search_and_picked(self, type_field):
         self.compose_page.open()
         letter_params = self.compose_page.letter_params()
         letter_params.click_address_book(type_field)
