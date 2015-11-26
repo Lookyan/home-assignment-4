@@ -246,7 +246,9 @@ class ContentEdit(Component):
 
     def add_emotion(self, emotion):
         self.driver.find_element_by_xpath(self.EMOTIONS_BTN).click()
+        WebDriverWait(self.driver, 2).until(expected_conditions.visibility_of_element_located((By.XPATH, self.EMOTIONS_TAB_BTN)))
         self.driver.find_element_by_xpath(self.EMOTIONS_TAB_BTN).click()
+        WebDriverWait(self.driver, 2).until(expected_conditions.visibility_of_element_located((By.XPATH, self.EMOTION_PICK_BTN.format(emotion))))
         self.driver.find_element_by_xpath(self.EMOTION_PICK_BTN.format(emotion)).click()
 
     def check_emotion(self, emotion):

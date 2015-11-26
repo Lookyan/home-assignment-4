@@ -69,7 +69,7 @@ class MainToolbar(Component):
         self.driver.find_element_by_xpath(self.TEMPLATE_PICK_BTN.format(template)).click()
 
     def cancel(self):
-        WebDriverWait(self.driver, 2).until(expected_conditions.presence_of_element_located((By.XPATH, self.CANCEL_BTN)))
+        WebDriverWait(self.driver, 2).until(expected_conditions.visibility_of_element_located((By.XPATH, self.CANCEL_BTN)))
         self.driver.find_element_by_xpath(self.CANCEL_BTN).click()
         try:
             WebDriverWait(self.driver, 3).until(expected_conditions.alert_is_present())
