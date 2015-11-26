@@ -145,13 +145,7 @@ class ContentEdit(Component):
 
     def check_elem_style(self, style, value, elem='span', child='//'):
         self.switch_to_edit()
-        try:
-            element = self.driver.find_element_by_xpath(self.BASE + child + elem)
-        except NoSuchElementException:
-            element = None
-
-        if element is None:
-            return False
+        element = self.driver.find_element_by_xpath(self.BASE + child + elem)
         css = element.value_of_css_property(style)
         self.switch_back()
         return css == value
@@ -206,13 +200,11 @@ class ContentEdit(Component):
         self.driver.find_element_by_xpath(self.FONT_PICK_BTN.format(fonts[fam])).click()
 
     def check_font_family(self, fam):
-        fonts = {
-            'arial': 'arial,helvetica,sans-serif',
-            'arial black': 'arial black,avant garde',
-            'georgia': 'georgia,palatino',
-            'comic sans': 'comic sans ms,sans-serif'
-        }
-        return self.check_elem_style('font-family', fonts[fam])
+        self.switch_to_edit()
+        element = self.driver.find_element_by_xpath(self.BASE + '//span')
+        css = element.value_of_css_property('font-family')
+        self.switch_back()
+        return fam in css
 
     def add_align(self, align):
         self.switch_to_edit()
@@ -341,7 +333,7 @@ class ContentEdit(Component):
     def check_theme(self, num):
         themes = self.driver.find_elements_by_xpath(self.DESIGN_PICK_BTN)
         url = themes[num].value_of_css_property('background-image')
-        internal_num = re.search('([0-9]+)\.[a-z]+\"\)$', url).group(1)
+        internal_num = re.search('([0-9]+)\.[a-z]+\"?\)$', url).group(1)
         elems = self.driver.find_elements_by_xpath(self.COMPOSE_FRAME_TABLE.format(internal_num))
         return len(elems) > 0
 
@@ -359,7 +351,8 @@ class ContentEdit(Component):
     def check_card(self, num):
         cards = self.driver.find_elements_by_xpath(self.CARD_PICK_BTN)
         url = cards[num].value_of_css_property('background-image')
-        internal_num = re.search('([0-9]+)i\.[a-z]+\"\)$', url).group(1)
+        internal_num = re.search('([0-9]+)i\.[a-z]+\"?\)$', url)
+        internal_num = internal_num.group(1)
         self.switch_to_edit()
         elems = self.driver.find_elements_by_xpath(self.CARD_ELEM.format(internal_num))
         self.switch_back()
